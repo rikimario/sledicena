@@ -1,10 +1,16 @@
-import { PackageSearch, Plus } from "lucide-react";
+import { PackageSearch } from "lucide-react";
 import ProductCard from "./ProductCard";
+import type { Product } from "@/lib/types";
 
-export default function ProductsDashboard() {
-  // Temporary demo data
-  const hasProducts = true;
+type ProductsDashboardProps = {
+  products: Product[];
+  onDeleteProduct: (id: string) => void;
+};
 
+export default function ProductsDashboard({
+  products,
+  onDeleteProduct,
+}: ProductsDashboardProps) {
   return (
     <section id="products" className="mx-auto w-full max-w-7xl px-6 py-16">
       <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
@@ -19,13 +25,19 @@ export default function ProductsDashboard() {
 
         <div className="flex items-center gap-2 text-sm font-medium text-slate-500">
           <span className="h-2 w-2 rounded-full bg-emerald-500" />
-          {hasProducts ? "1 product tracked" : "No products yet"}
+          {products.length} products tracked
         </div>
       </div>
 
-      {hasProducts ? (
+      {products.length > 0 ? (
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-          <ProductCard />
+          {products.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onDeleteProduct={onDeleteProduct}
+            />
+          ))}
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 py-16 text-center">
@@ -40,14 +52,6 @@ export default function ProductsDashboard() {
           <p className="mt-2 max-w-sm text-sm leading-6 text-slate-500">
             Add your first product URL above and start monitoring its price.
           </p>
-
-          <a
-            href="#"
-            className="mt-6 inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
-          >
-            <Plus className="h-4 w-4" />
-            Add your first product
-          </a>
         </div>
       )}
     </section>
